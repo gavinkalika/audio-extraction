@@ -1,0 +1,9 @@
+node_modules/
+audio/*
+./audio/*
+!audio/.gitkeep
+.env
+.DS_Store
+*.log
+playlist-*.json
+exports/
