@@ -1,32 +1,33 @@
 #!/bin/bash
 
-IMAGE_NAME="youtube-cli"
-CONTAINER_NAME="youtube-cli-container"
-
 build() {
-    echo "Building Docker image..."
-    docker build -t $IMAGE_NAME .
+    echo "Building Docker images..."
+    docker-compose build
 }
 
 up() {
-    echo "Starting container..."
-    docker run -it --rm --name $CONTAINER_NAME $IMAGE_NAME
+    echo "Starting containers..."
+    docker-compose up -d
+    echo "Containers started. Use './run.sh logs' to view logs."
+}
+
+logs() {
+    docker-compose logs -f app
 }
 
 exec_cmd() {
-    echo "Executing command in container: $@"
-    docker exec -it $CONTAINER_NAME python "$@"
+    echo "Executing command in app container: $@"
+    docker-compose exec app python "$@"
 }
 
 shell() {
-    echo "Opening shell in container..."
-    docker exec -it $CONTAINER_NAME /bin/bash
+    echo "Opening shell in app container..."
+    docker-compose exec app /bin/bash
 }
 
 down() {
-    echo "Stopping container..."
-    docker stop $CONTAINER_NAME 2>/dev/null || true
-    docker rm $CONTAINER_NAME 2>/dev/null || true
+    echo "Stopping containers..."
+    docker-compose down
 }
 
 case "$1" in
@@ -35,6 +36,9 @@ case "$1" in
         ;;
     up)
         up
+        ;;
+    logs)
+        logs
         ;;
     exec)
         shift
@@ -47,12 +51,13 @@ case "$1" in
         down
         ;;
     *)
-        echo "Usage: $0 {build|up|exec|shell|down}"
-        echo "  build  - Build Docker image"
-        echo "  up     - Start container"
-        echo "  exec   - Execute Python command in running container"
-        echo "  shell  - Open interactive shell in container"
-        echo "  down   - Stop and remove container"
+        echo "Usage: $0 {build|up|logs|exec|shell|down}"
+        echo "  build  - Build Docker images"
+        echo "  up     - Start containers in background"
+        echo "  logs   - View app logs"
+        echo "  exec   - Execute Python command in app container"
+        echo "  shell  - Open interactive shell in app container"
+        echo "  down   - Stop containers"
         exit 1
         ;;
 esac

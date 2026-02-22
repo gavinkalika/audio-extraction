@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: youtube-cli
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=youtube_user
+      - DB_PASSWORD=youtube_pass
+      - DB_NAME=youtube_db
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+    volumes:
+      - ./src:/app/src
+      - ./audio:/app/audio
+
+  db:
+    image: mysql:8.0
+    container_name: youtube-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_pass
+      - MYSQL_DATABASE=youtube_db
+      - MYSQL_USER=youtube_user
+      - MYSQL_PASSWORD=youtube_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

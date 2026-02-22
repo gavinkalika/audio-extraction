@@ -1,2 +1,7 @@
 google-api-python-client
 yt-dlp
+mysql-connector-python
+python-dotenv
+pytest
+pytest-cov
+pytest-mock
