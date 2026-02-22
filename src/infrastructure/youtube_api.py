@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
-from typing import List, Optional
-from ..domain.entities import Video, Playlist
-from ..interfaces.youtube_repository import YouTubeRepository
+from typing import List
+from src.domain.entities import Video, Playlist
+from src.interfaces.youtube_repository import YouTubeRepository
 
 
 class YouTubeAPIRepository(YouTubeRepository):
