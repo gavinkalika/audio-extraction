@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from src.infrastructure.youtube_api import YouTubeAPIRepository
+from infrastructure.youtube_api import YouTubeAPIRepository
 
 
 def main():
