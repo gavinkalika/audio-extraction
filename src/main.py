@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from infrastructure.youtube_api import YouTubeAPIRepository
+from interfaces.youtube_repository import YouTubeRepository
 
 
 def main():
@@ -12,7 +13,7 @@ def main():
         print("Error: YOUTUBE_API_KEY not set")
         return
 
-    repo = YouTubeAPIRepository()
+    repo: YouTubeRepository = YouTubeAPIRepository()
     repo.authenticate(api_key)
     print("Successfully connected to YouTube API")
 
