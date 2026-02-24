@@ -91,3 +91,40 @@ class YouTubeAPIRepository(YouTubeRepository):
                 break
 
         return videos
+
+    def get_videos_batch(self, video_ids: List[str]) -> List[Video]:
+        """Fetch multiple videos with full details including duration."""
+        videos = []
+        
+        # API allows max 50 videos per request
+        for i in range(0, len(video_ids), 50):
+            batch_ids = video_ids[i:i + 50]
+            response = self.youtube.videos().list(
+                part='snippet,contentDetails',
+                id=','.join(batch_ids)
+            ).execute()
+
+            for item in response['items']:
+                duration = self._parse_duration(item['contentDetails']['duration'])
+                videos.append(Video(
+                    id=item['id'],
+                    title=item['snippet']['title'],
+                    channel_id=item['snippet']['channelId'],
+                    channel_title=item['snippet']['channelTitle'],
+                    duration=duration,
+                    description=item['snippet'].get('description'),
+                    published_at=item['snippet'].get('publishedAt')
+                ))
+
+        return videos
+
+    def _parse_duration(self, duration_str: str) -> int:
+        """Parse ISO 8601 duration (PT1H2M3S) to seconds."""
+        import re
+        match = re.match(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration_str)
+        if not match:
+            return 0
+        hours = int(match.group(1) or 0)
+        minutes = int(match.group(2) or 0)
+        seconds = int(match.group(3) or 0)
+        return hours * 3600 + minutes * 60 + seconds

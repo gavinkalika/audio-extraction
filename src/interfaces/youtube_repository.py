@@ -19,3 +19,8 @@ class YouTubeRepository(ABC):
     @abstractmethod
     def get_video(self, video_id: str) -> Video:
         pass
+
+    @abstractmethod
+    def get_videos_batch(self, video_ids: List[str]) -> List[Video]:
+        """Fetch multiple videos with full details (including duration)."""
+        pass
